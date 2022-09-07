@@ -1,27 +1,48 @@
 namespace ProjectTADS;
-
 public partial class Form1 : Form
 {
-    
+    PictureBox LDLogo = new PictureBox();
     Button exit = new Button();
+    TextBox username = new TextBox();
+    TextBox password = new TextBox();
+    Label usernameLabel = new Label();
+    Label passwordLabel = new Label();
     public Form1()
     {
         InitializeComponent();
-        this.CenterToScreen();
-        
         this.FormBorderStyle = FormBorderStyle.None;
-        this.Size = new Size(800, 600); 
+        this.Size = new Size(600, 600); 
         this.Controls.Add(exit);
-        this.BackColor = Color.GhostWhite;
-        exit.Location = new Point(750,0);
+        this.BackColor = Color.Aquamarine;
+        exit.Location = new Point(550,0);
         exit.Size = new Size(38, 38);
         exit.FlatStyle = FlatStyle.Flat;
         exit.FlatAppearance.BorderSize = 0;
-        
-       
         exit.Click += new EventHandler(exit_Click);
         exit.Paint += new PaintEventHandler(exit_Paint);
         this.Paint += new PaintEventHandler(Form1_Paint);
+        LDLogo.Image = Image.FromFile("LDLogo.png");
+        LDLogo.SizeMode = PictureBoxSizeMode.StretchImage;
+        LDLogo.Size = new Size(430, 360);
+        LDLogo.Location = new Point(90, 50);
+        this.Controls.Add(LDLogo);
+        usernameLabel.Text = "Username";
+        usernameLabel.Location = new Point(150, 450);
+        usernameLabel.Size = new Size(100, 20);
+        this.Controls.Add(usernameLabel);
+        passwordLabel.Text = "Password";
+        passwordLabel.Location = new Point(150, 500);
+        passwordLabel.Size = new Size(100, 20);
+        this.Controls.Add(passwordLabel);
+        username.Location = new Point(250, 450);
+        username.Size = new Size(100, 20);
+        this.Controls.Add(username);
+        password.Location = new Point(250, 500);
+        password.Size = new Size(100, 20);
+        this.Controls.Add(password);
+        this.CenterToScreen();
+
+
     }
     private void exit_Paint(object sender, PaintEventArgs e)
     {
@@ -74,35 +95,33 @@ public class MiMBox : Form
     public MiMBox()
     {
         Font f = new Font("Arial", 12);
-        this.CenterToScreen();
-        this.Size = new Size(468, 297);
+        this.Size = new Size(404, 204);
         this.FormBorderStyle = FormBorderStyle.None;
         this.Paint += new PaintEventHandler(MiMBox_Paint);
         this.BackColor = Color.Black;
-        cuerpo.Size = new Size(446, 246);
+        cuerpo.Size = new Size(400, 200);
         cuerpo.Location = new Point(2,2);
-        cuerpo.BackColor = Color.White;
+        cuerpo.BackColor = Color.Aquamarine;
         this.Controls.Add(cuerpo);
         cuerpo.Paint += new PaintEventHandler(cuerpo_Paint);
         warning.Text = "Are you sure you want to exit?";
         warning.Font = f;
         warning.Size = new Size(300, 50);
-        warning.Location = new Point(90,87);
+        warning.Location = new Point(60,70);
+        warning.BackColor = Color.Aqua;
         cuerpo.Controls.Add(warning);
         yes.Size = new Size(100, 50);
-        yes.Location = new Point(75, 170);
+        yes.Location = new Point(55, 120);
         yes.Text = "Yes";
-        yes.FlatStyle = FlatStyle.Flat;
-        yes.FlatAppearance.BorderSize = 0;
         no.Size = new Size(100, 50);
-        no.Location = new Point(275, 170);
+        no.Location = new Point(255, 120);
         no.Text = "No";
-        no.FlatStyle = FlatStyle.Flat;
-        no.FlatAppearance.BorderSize = 0;
         cuerpo.Controls.Add(yes);
         cuerpo.Controls.Add(no);
         yes.Click += new EventHandler(yes_Click);
         no.Click += new EventHandler(no_Click);
+        this.CenterToScreen();
+
     }
     private void yes_Click(object sender, EventArgs e)
     {
