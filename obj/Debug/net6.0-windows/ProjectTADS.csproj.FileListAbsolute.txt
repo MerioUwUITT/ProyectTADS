@@ -1,0 +1,15 @@
+C:\Users\super\Documents\ProjectTADS\bin\Debug\net6.0-windows\ProjectTADS.exe
+C:\Users\super\Documents\ProjectTADS\bin\Debug\net6.0-windows\ProjectTADS.deps.json
+C:\Users\super\Documents\ProjectTADS\bin\Debug\net6.0-windows\ProjectTADS.runtimeconfig.json
+C:\Users\super\Documents\ProjectTADS\bin\Debug\net6.0-windows\ProjectTADS.dll
+C:\Users\super\Documents\ProjectTADS\bin\Debug\net6.0-windows\ProjectTADS.pdb
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ProjectTADS.csproj.AssemblyReference.cache
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ProjectTADS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ProjectTADS.AssemblyInfoInputs.cache
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ProjectTADS.AssemblyInfo.cs
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ProjectTADS.csproj.CoreCompileInputs.cache
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ProjectTADS.dll
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\refint\ProjectTADS.dll
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ProjectTADS.pdb
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ProjectTADS.genruntimeconfig.cache
+C:\Users\super\Documents\ProjectTADS\obj\Debug\net6.0-windows\ref\ProjectTADS.dll
