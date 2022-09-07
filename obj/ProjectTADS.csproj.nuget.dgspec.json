@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\super\\Documents\\ProjectTADS\\ProjectTADS.csproj": {}
+    "C:\\Users\\super\\Documents\\ProjectTADS\\ProyectTADS\\ProjectTADS.csproj": {}
   },
   "projects": {
-    "C:\\Users\\super\\Documents\\ProjectTADS\\ProjectTADS.csproj": {
+    "C:\\Users\\super\\Documents\\ProjectTADS\\ProyectTADS\\ProjectTADS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\super\\Documents\\ProjectTADS\\ProjectTADS.csproj",
+        "projectUniqueName": "C:\\Users\\super\\Documents\\ProjectTADS\\ProyectTADS\\ProjectTADS.csproj",
         "projectName": "ProjectTADS",
-        "projectPath": "C:\\Users\\super\\Documents\\ProjectTADS\\ProjectTADS.csproj",
+        "projectPath": "C:\\Users\\super\\Documents\\ProjectTADS\\ProyectTADS\\ProjectTADS.csproj",
         "packagesPath": "C:\\Users\\super\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\super\\Documents\\ProjectTADS\\obj\\",
+        "outputPath": "C:\\Users\\super\\Documents\\ProjectTADS\\ProyectTADS\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
