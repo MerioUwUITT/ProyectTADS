@@ -7,11 +7,13 @@ public partial class Form1 : Form
     TextBox password = new TextBox();
     Label usernameLabel = new Label();
     Label passwordLabel = new Label();
+    Label LoginLabel = new Label();
     public Form1()
     {
+        Font font = new Font("Open Sans", 12);
         InitializeComponent();
         this.FormBorderStyle = FormBorderStyle.None;
-        this.Size = new Size(600, 600); 
+        this.Size = new Size(600, 650); 
         this.Controls.Add(exit);
         this.BackColor = Color.Aquamarine;
         exit.Location = new Point(550,0);
@@ -27,20 +29,28 @@ public partial class Form1 : Form
         LDLogo.Location = new Point(90, 50);
         this.Controls.Add(LDLogo);
         usernameLabel.Text = "Username";
-        usernameLabel.Location = new Point(150, 450);
-        usernameLabel.Size = new Size(100, 20);
+        usernameLabel.Font = font;
+        usernameLabel.Location = new Point(130, 480);
+        usernameLabel.Size = new Size(110, 30);
         this.Controls.Add(usernameLabel);
         passwordLabel.Text = "Password";
-        passwordLabel.Location = new Point(150, 500);
-        passwordLabel.Size = new Size(100, 20);
+        passwordLabel.Font = font;
+        passwordLabel.Location = new Point(130, 530);
+        passwordLabel.Size = new Size(110, 30);
+        passwordLabel.BackColor = Color.Transparent;
         this.Controls.Add(passwordLabel);
-        username.Location = new Point(250, 450);
-        username.Size = new Size(100, 20);
+        username.Location = new Point(250, 480);
+        username.Size = new Size(200, 20);
         this.Controls.Add(username);
-        password.Location = new Point(250, 500);
-        password.Size = new Size(100, 20);
+        password.Location = new Point(250, 530);
+        password.Size = new Size(200, 20);
         this.Controls.Add(password);
         this.CenterToScreen();
+        LoginLabel.Text = "Login";
+        LoginLabel.Font = new Font("Open Sans", 20);
+        LoginLabel.Location = new Point(250, 400);
+        LoginLabel.Size = new Size(130, 60);
+        this.Controls.Add(LoginLabel);
 
 
     }
@@ -108,20 +118,22 @@ public class MiMBox : Form
         warning.Font = f;
         warning.Size = new Size(300, 50);
         warning.Location = new Point(60,70);
-        warning.BackColor = Color.Aqua;
         cuerpo.Controls.Add(warning);
         yes.Size = new Size(100, 50);
         yes.Location = new Point(55, 120);
         yes.Text = "Yes";
+        yes.FlatStyle = FlatStyle.Flat;
+        yes.FlatAppearance.BorderSize = 0;
         no.Size = new Size(100, 50);
         no.Location = new Point(255, 120);
         no.Text = "No";
+        no.FlatStyle = FlatStyle.Flat;
+        no.FlatAppearance.BorderSize = 0;
         cuerpo.Controls.Add(yes);
         cuerpo.Controls.Add(no);
         yes.Click += new EventHandler(yes_Click);
         no.Click += new EventHandler(no_Click);
         this.CenterToScreen();
-
     }
     private void yes_Click(object sender, EventArgs e)
     {
