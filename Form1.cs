@@ -61,6 +61,30 @@ public partial class Form1 : Form
         LoginButton.FlatAppearance.BorderSize = 0;
         this.Controls.Add(LoginButton);
     }
+    private bool mouseDown;
+private Point lastLocation;
+
+    private void Form1_MouseDown(object sender, MouseEventArgs e)
+    {
+        mouseDown = true;
+        lastLocation = e.Location;
+    }
+
+    private void Form1_MouseMove(object sender, MouseEventArgs e)
+    {
+        if(mouseDown)
+        {
+            this.Location = new Point(
+                (this.Location.X - lastLocation.X) + e.X, (this.Location.Y - lastLocation.Y) + e.Y);
+
+            this.Update();
+        }
+    }
+
+    private void Form1_MouseUp(object sender, MouseEventArgs e)
+    {
+        mouseDown = false;
+    }
     private void LoginButton_Click(object sender, EventArgs e)
     {
         if (username.Text == "admin" && password.Text == "admin")
@@ -209,13 +233,14 @@ public class Registering:Form
 
     public Registering()
     {
-        this.Size = new Size(1000, 1000);
+        Font dafont = new Font("Open Sans", 20);
+        this.Size = new Size(1200, 850);
         this.FormBorderStyle = FormBorderStyle.None;
         this.Paint += new PaintEventHandler(Registering_Paint);
         this.BackColor = Color.DarkSeaGreen;
         this.CenterToScreen();
         exit.Size = new Size(38,38);
-        exit.Location = new Point(960, 0);
+        exit.Location = new Point(1160, 0);
         exit.FlatStyle = FlatStyle.Flat;
         exit.FlatAppearance.BorderSize = 0;
         exit.BackColor = Color.DarkSeaGreen;
@@ -229,8 +254,8 @@ public class Registering:Form
         instructions.BackColor = Color.Transparent;
         this.Controls.Add(instructions);
         owl.Size = new Size(150, 175);
-        instructions.Location = new Point(150, 160);
-        owl.Location = new Point(720, 55);
+        instructions.Location = new Point(225, 160);
+        owl.Location = new Point(795, 55);
         owl.Image = Image.FromFile("owl.png");
         owl.SizeMode = PictureBoxSizeMode.StretchImage;
         owl.BackColor = Color.Transparent;
@@ -239,73 +264,73 @@ public class Registering:Form
         name.Text = "First Name";
         name.Size = new Size(200, 50);
         name.Location = new Point(100, 300);
-        name.Font = new Font("Open Sans", 12);
+        name.Font = dafont;
         this.Controls.Add(name);
-        namebox.Size = new Size(200, 50);
+        namebox.Size = new Size(400, 50);
         namebox.Location = new Point(100, 350);
         namebox.Font = new Font("Open Sans", 12);
         this.Controls.Add(namebox);
         name2.Text = "Last Name";
         name2.Size = new Size(200, 50);
         name2.Location = new Point(100, 400);
-        name2.Font = new Font("Open Sans", 12);
+        name2.Font = dafont;
         this.Controls.Add(name2);
-        name2box.Size = new Size(200, 50);
+        name2box.Size = new Size(400, 50);
         name2box.Location = new Point(100, 450);
         name2box.Font = new Font("Open Sans", 12);
         this.Controls.Add(name2box);
         email.Text = "Email";
         email.Size = new Size(200, 50);
         email.Location = new Point(100, 500);
-        email.Font = new Font("Open Sans", 12);
+        email.Font = dafont;
         this.Controls.Add(email);
-        emailbox.Size = new Size(200, 50);
+        emailbox.Size = new Size(400, 50);
         emailbox.Location = new Point(100, 550);
         emailbox.Font = new Font("Open Sans", 12);
         this.Controls.Add(emailbox);
         phone.Text = "Phone";
         phone.Size = new Size(200, 50);
         phone.Location = new Point(100, 600);
-        phone.Font = new Font("Open Sans", 12);
+        phone.Font = dafont;
         this.Controls.Add(phone);
-        phonebox.Size = new Size(200, 50);
+        phonebox.Size = new Size(400, 50);
         phonebox.Location = new Point(100, 650);
         phonebox.Font = new Font("Open Sans", 12);
         this.Controls.Add(phonebox);
         address.Text = "Address";
         address.Size = new Size(200, 50);
-        address.Location = new Point(100, 700);
-        address.Font = new Font("Open Sans", 12);
+        address.Location = new Point(650, 300);
+        address.Font = dafont;
         this.Controls.Add(address);
-        addressbox.Size = new Size(200, 50);
-        addressbox.Location = new Point(300, 750);
+        addressbox.Size = new Size(400, 50);
+        addressbox.Location = new Point(650, 350);
         addressbox.Font = new Font("Open Sans", 12);
         this.Controls.Add(addressbox);
         pcode.Text = "Postal Code";
         pcode.Size = new Size(200, 50);
-        pcode.Location = new Point(300, 800);
-        pcode.Font = new Font("Open Sans", 12);
+        pcode.Location = new Point(650, 400);
+        pcode.Font =dafont;
         this.Controls.Add(pcode);
-        pcodebox.Size = new Size(200, 50);
-        pcodebox.Location = new Point(300, 850);
+        pcodebox.Size = new Size(400, 50);
+        pcodebox.Location = new Point(650, 450);
         pcodebox.Font = new Font("Open Sans", 12);
         this.Controls.Add(pcodebox);
         city.Text = "City";
         city.Size = new Size(200, 50);
-        city.Location = new Point(300, 900);
-        city.Font = new Font("Open Sans", 12);
+        city.Location = new Point(650, 500);
+        city.Font = dafont;
         this.Controls.Add(city);
-        citybox.Size = new Size(200, 50);
-        citybox.Location = new Point(300, 950);
+        citybox.Size = new Size(400, 50);
+        citybox.Location = new Point(650, 550);
         citybox.Font = new Font("Open Sans", 12);
         this.Controls.Add(citybox);
         notes.Text = "Notes";
         notes.Size = new Size(200, 50);
-        notes.Location = new Point(300, 1000);
-        notes.Font = new Font("Open Sans", 12);
+        notes.Location = new Point(650, 600);
+        notes.Font = dafont;
         this.Controls.Add(notes);
-        notesbox.Size = new Size(200, 50);
-        notesbox.Location = new Point(300, 1050);
+        notesbox.Size = new Size(400, 50);
+        notesbox.Location = new Point(650, 650);
         notesbox.Font = new Font("Open Sans", 12);
         this.Controls.Add(notesbox);
 
@@ -328,7 +353,7 @@ public class Registering:Form
         NativeMethods.DeleteObject(ptr);
         Pen blackpen = new Pen(Color.Black, 2);
         Pen boldpen = new Pen(Color.Black, 10);
-        e.Graphics.DrawLine(blackpen, 0, 40, 1000, 40);
-        e.Graphics.DrawLine(boldpen, 120, 212, 800,212);
+        e.Graphics.DrawLine(blackpen, 0, 40, 1200, 40);
+        e.Graphics.DrawLine(boldpen, 195, 212, 875,212);
     }
 }
