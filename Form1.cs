@@ -124,7 +124,7 @@ public class MiMBox : Form
     Button no = new Button();
     public MiMBox()
     {
-        Font f = new Font("Arial", 12);
+        Font f = new Font("Open Sans", 12);
         this.Size = new Size(404, 204);
         this.FormBorderStyle = FormBorderStyle.None;
         this.Paint += new PaintEventHandler(MiMBox_Paint);
@@ -186,6 +186,7 @@ public class MiMBox : Form
 }
 public class Registering:Form
 {
+    Label instructions = new Label();
     Button exit = new Button();
     public Registering()
     {
@@ -202,6 +203,11 @@ public class Registering:Form
         exit.Paint += new PaintEventHandler(exit_Paint);
         exit.Click += new EventHandler(exit_Click);
         this.Controls.Add(exit);
+        instructions.Text = "Please enter your information below";
+        instructions.Size = new Size(1000, 100);
+        instructions.Location = new Point(80, 100);
+        instructions.Font = new Font("Open Sans", 20);
+        this.Controls.Add(instructions);
     }
     private void exit_Click(object sender, EventArgs e)
     {
@@ -221,5 +227,6 @@ public class Registering:Form
         NativeMethods.DeleteObject(ptr);
         Pen blackpen = new Pen(Color.Black, 2);
         e.Graphics.DrawLine(blackpen, 0, 40, 800, 40);
+        e.Graphics.DrawLine(blackpen, 0, 120, 800,120);
     }
 }
