@@ -188,15 +188,34 @@ public class Registering:Form
 {
     Label instructions = new Label();
     Button exit = new Button();
+    PictureBox owl = new PictureBox();
+    Label name = new Label();
+    Label name2 = new Label();
+    Label email = new Label();
+    Label phone = new Label();
+    Label address = new Label();
+    Label pcode = new Label();
+    Label city = new Label();
+    Label notes = new Label();
+    TextBox namebox = new TextBox();
+    TextBox name2box = new TextBox();
+    TextBox emailbox = new TextBox();
+    TextBox phonebox = new TextBox();
+    TextBox addressbox = new TextBox();
+    TextBox pcodebox = new TextBox();
+    TextBox citybox = new TextBox();
+    TextBox notesbox = new TextBox();
+
+
     public Registering()
     {
-        this.Size = new Size(800, 600);
+        this.Size = new Size(1000, 1000);
         this.FormBorderStyle = FormBorderStyle.None;
         this.Paint += new PaintEventHandler(Registering_Paint);
         this.BackColor = Color.DarkSeaGreen;
         this.CenterToScreen();
         exit.Size = new Size(38,38);
-        exit.Location = new Point(760, 0);
+        exit.Location = new Point(960, 0);
         exit.FlatStyle = FlatStyle.Flat;
         exit.FlatAppearance.BorderSize = 0;
         exit.BackColor = Color.DarkSeaGreen;
@@ -204,10 +223,92 @@ public class Registering:Form
         exit.Click += new EventHandler(exit_Click);
         this.Controls.Add(exit);
         instructions.Text = "Please enter your information below";
-        instructions.Size = new Size(1000, 100);
-        instructions.Location = new Point(80, 100);
+        instructions.Size = new Size(604, 100);
         instructions.Font = new Font("Open Sans", 20);
+        instructions.Parent = owl;
+        instructions.BackColor = Color.Transparent;
         this.Controls.Add(instructions);
+        owl.Size = new Size(150, 175);
+        instructions.Location = new Point(150, 160);
+        owl.Location = new Point(720, 55);
+        owl.Image = Image.FromFile("owl.png");
+        owl.SizeMode = PictureBoxSizeMode.StretchImage;
+        owl.BackColor = Color.Transparent;
+        this.Controls.Add(owl);
+        owl.SendToBack();
+        name.Text = "First Name";
+        name.Size = new Size(200, 50);
+        name.Location = new Point(100, 300);
+        name.Font = new Font("Open Sans", 12);
+        this.Controls.Add(name);
+        namebox.Size = new Size(200, 50);
+        namebox.Location = new Point(100, 350);
+        namebox.Font = new Font("Open Sans", 12);
+        this.Controls.Add(namebox);
+        name2.Text = "Last Name";
+        name2.Size = new Size(200, 50);
+        name2.Location = new Point(100, 400);
+        name2.Font = new Font("Open Sans", 12);
+        this.Controls.Add(name2);
+        name2box.Size = new Size(200, 50);
+        name2box.Location = new Point(100, 450);
+        name2box.Font = new Font("Open Sans", 12);
+        this.Controls.Add(name2box);
+        email.Text = "Email";
+        email.Size = new Size(200, 50);
+        email.Location = new Point(100, 500);
+        email.Font = new Font("Open Sans", 12);
+        this.Controls.Add(email);
+        emailbox.Size = new Size(200, 50);
+        emailbox.Location = new Point(100, 550);
+        emailbox.Font = new Font("Open Sans", 12);
+        this.Controls.Add(emailbox);
+        phone.Text = "Phone";
+        phone.Size = new Size(200, 50);
+        phone.Location = new Point(100, 600);
+        phone.Font = new Font("Open Sans", 12);
+        this.Controls.Add(phone);
+        phonebox.Size = new Size(200, 50);
+        phonebox.Location = new Point(100, 650);
+        phonebox.Font = new Font("Open Sans", 12);
+        this.Controls.Add(phonebox);
+        address.Text = "Address";
+        address.Size = new Size(200, 50);
+        address.Location = new Point(100, 700);
+        address.Font = new Font("Open Sans", 12);
+        this.Controls.Add(address);
+        addressbox.Size = new Size(200, 50);
+        addressbox.Location = new Point(300, 750);
+        addressbox.Font = new Font("Open Sans", 12);
+        this.Controls.Add(addressbox);
+        pcode.Text = "Postal Code";
+        pcode.Size = new Size(200, 50);
+        pcode.Location = new Point(300, 800);
+        pcode.Font = new Font("Open Sans", 12);
+        this.Controls.Add(pcode);
+        pcodebox.Size = new Size(200, 50);
+        pcodebox.Location = new Point(300, 850);
+        pcodebox.Font = new Font("Open Sans", 12);
+        this.Controls.Add(pcodebox);
+        city.Text = "City";
+        city.Size = new Size(200, 50);
+        city.Location = new Point(300, 900);
+        city.Font = new Font("Open Sans", 12);
+        this.Controls.Add(city);
+        citybox.Size = new Size(200, 50);
+        citybox.Location = new Point(300, 950);
+        citybox.Font = new Font("Open Sans", 12);
+        this.Controls.Add(citybox);
+        notes.Text = "Notes";
+        notes.Size = new Size(200, 50);
+        notes.Location = new Point(300, 1000);
+        notes.Font = new Font("Open Sans", 12);
+        this.Controls.Add(notes);
+        notesbox.Size = new Size(200, 50);
+        notesbox.Location = new Point(300, 1050);
+        notesbox.Font = new Font("Open Sans", 12);
+        this.Controls.Add(notesbox);
+
     }
     private void exit_Click(object sender, EventArgs e)
     {
@@ -226,7 +327,8 @@ public class Registering:Form
         this.Region = System.Drawing.Region.FromHrgn(ptr);
         NativeMethods.DeleteObject(ptr);
         Pen blackpen = new Pen(Color.Black, 2);
-        e.Graphics.DrawLine(blackpen, 0, 40, 800, 40);
-        e.Graphics.DrawLine(blackpen, 0, 120, 800,120);
+        Pen boldpen = new Pen(Color.Black, 10);
+        e.Graphics.DrawLine(blackpen, 0, 40, 1000, 40);
+        e.Graphics.DrawLine(boldpen, 120, 212, 800,212);
     }
 }
