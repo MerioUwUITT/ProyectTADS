@@ -60,16 +60,6 @@ public partial class Form1 : Form
         LoginButton.FlatStyle = FlatStyle.Flat;
         LoginButton.FlatAppearance.BorderSize = 0;
         this.Controls.Add(LoginButton);
-        LoginButton.MouseHover += new EventHandler(LoginButton_MouseHover);
-        LoginButton.MouseLeave += new EventHandler(LoginButton_MouseLeave);
-    }
-    private void LoginButton_MouseHover(object sender, EventArgs e)
-    {
-        LoginButton.Font = new Font("Open Sans", 12, FontStyle.Bold);
-    }
-    private void LoginButton_MouseLeave(object sender, EventArgs e)
-    {
-        LoginButton.Font = new Font("Open Sans", 12);
     }
     
     private void LoginButton_Click(object sender, EventArgs e)
@@ -170,29 +160,6 @@ public class MiMBox : Form
         exitlabel.Size = new Size(100, 30);
         exitlabel.Location = new Point(170, 8);
         cuerpo.Controls.Add(exitlabel);
-        yes.MouseHover += new EventHandler(yes_MouseHover);
-        yes.MouseLeave += new EventHandler(yes_MouseLeave);
-        no.MouseHover += new EventHandler(no_MouseHover);
-        no.MouseLeave += new EventHandler(no_MouseLeave);
-    }
-    private void no_MouseHover(object sender, EventArgs e)
-    {
-        no.Font = new Font("Open Sans", 12, FontStyle.Bold);
-        no.FlatAppearance.BorderSize = 1;
-    }
-    private void no_MouseLeave(object sender, EventArgs e)
-    {
-        no.Font = new Font("Open Sans", 12);
-        no.FlatAppearance.BorderSize = 0;
-    }
-
-    private void yes_MouseHover(object sender, EventArgs e)
-    {
-        yes.Font = new Font("Open Sans", 12, FontStyle.Bold);
-    }
-    private void yes_MouseLeave(object sender, EventArgs e)
-    {
-        yes.Font = new Font("Open Sans", 12);
     }
     private void yes_Click(object sender, EventArgs e)
     {
@@ -354,8 +321,8 @@ public class Registering:Form
     }
     private void register_Click(object sender, EventArgs e)
     {
-        DatePad datepad = new DatePad();
-        datepad.Show();
+        Calendar calendar = new Calendar();
+        calendar.Show();
         this.Hide();
     }
     private void exit_Click(object sender, EventArgs e)
@@ -380,21 +347,23 @@ public class Registering:Form
         e.Graphics.DrawLine(boldpen, 195, 212, 875,212);
     }
 }
-public class DatePad : Form
+public class Calendar : Form
 {
-    MonthCalendar calendar = new MonthCalendar();
+    MonthCalendar calendario = new MonthCalendar();
     Button exit = new Button();
-    public DatePad()
+    DataGridView schedulegrid = new DataGridView();
+    Panel schedule = new Panel();
+    public Calendar()
     {
         this.Size = new Size(1600, 900);
         this.CenterToScreen();
         this.FormBorderStyle = FormBorderStyle.None;
         this.BackColor = Color.White;
-        this.Paint += new PaintEventHandler(DatePad_Paint);
-        calendar.Size = new Size(300, 300);
-        calendar.Location = new Point(10,42);
-        calendar.Paint += new PaintEventHandler(calendar_Paint);
-        this.Controls.Add(calendar);
+        this.Paint += new PaintEventHandler(Calendar_Paint);
+        calendario.Size = new Size(300, 300);
+        calendario.Location = new Point(10,42);
+        calendario.Paint += new PaintEventHandler(calendario_Paint);
+        this.Controls.Add(calendario);
         exit.Size = new Size(38, 38);
         exit.Location = new Point(1540, 0);
         exit.FlatStyle = FlatStyle.Flat;
@@ -403,6 +372,36 @@ public class DatePad : Form
         this.Controls.Add(exit);
         exit.Paint += new PaintEventHandler(exit_Paint);
         exit.Click += new EventHandler(exit_Click);
+        schedule.Size = new Size(1290, 780);
+        schedule.Location = new Point(280, 50);
+        schedule.BackColor = Color.White;
+        schedule.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        this.Controls.Add(schedule);
+        schedulegrid.Size = new Size(1290, 780);
+        schedulegrid.ColumnCount = 2;
+        schedulegrid.Columns[0].Name = "Time";
+        schedulegrid.Columns[1].Name = "Dates";
+        schedulegrid.Rows.Add("8:00", "", "", "");
+        schedulegrid.Rows.Add("9:00", "", "", "");
+        schedulegrid.Rows.Add("10:00", "", "", "");
+        schedulegrid.Rows.Add("11:00", "", "", "");
+        schedulegrid.Rows.Add("12:00", "", "", "");
+        schedulegrid.Rows.Add("13:00", "", "", "");
+        schedulegrid.Rows.Add("14:00", "", "", "");
+        schedulegrid.Rows.Add("15:00", "", "", "");
+        schedulegrid.Rows.Add("16:00", "", "", "");
+        schedulegrid.Rows.Add("17:00", "", "", "");
+        schedulegrid.Rows.Add("18:00", "", "", "");
+        schedulegrid.Rows.Add("19:00", "", "", "");
+        schedulegrid.Rows.Add("20:00", "", "", "");
+        schedulegrid.Rows.Add("21:00", "", "", "");
+        for (int i = 0; i < 14; i++)
+        {
+            schedulegrid.Rows[i].Height = 50;
+        }
+        schedulegrid.Columns[1].Width = 1100;
+        schedule.Controls.Add(schedulegrid);
+        
     }
     private void exit_Click(object sender, EventArgs e)
     {
@@ -415,19 +414,20 @@ public class DatePad : Form
         e.Graphics.DrawLine(blackpen, 9, 9, 29, 29);
         e.Graphics.DrawLine(blackpen, 9, 29, 29, 9);
     }
-    private void calendar_Paint(object sender, PaintEventArgs e)
+    private void calendario_Paint(object sender, PaintEventArgs e)
     {
         IntPtr ptr = NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20);
         this.Region = System.Drawing.Region.FromHrgn(ptr);
         NativeMethods.DeleteObject(ptr);
     }
-    private void DatePad_Paint(object sender, PaintEventArgs e)
+    private void Calendar_Paint(object sender, PaintEventArgs e)
     {
         IntPtr ptr = NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20);
         this.Region = System.Drawing.Region.FromHrgn(ptr);
         NativeMethods.DeleteObject(ptr);
         Pen blackpen = new Pen(Color.Black, 2);
         e.Graphics.DrawLine(blackpen, 0, 40, this.Width, 40);
+
     }
 }
 
