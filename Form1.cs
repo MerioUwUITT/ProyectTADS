@@ -185,8 +185,22 @@ public class MiMBox : Form
         NativeMethods.DeleteObject(ptr);
     }
 }
+public class Client 
+{
+    public string Name { get; set; }
+    public string Name2 { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public string Address { get; set; }
+    public string City { get; set; }
+    public string Pcode { get; set; }
+    public string Notes { get; set; }
+    
+
+}
 public class Registering:Form
 {
+    List<Client> clients = new List<Client>();
     Label instructions = new Label();
     Button exit = new Button();
     PictureBox owl = new PictureBox();
@@ -321,6 +335,7 @@ public class Registering:Form
     }
     private void register_Click(object sender, EventArgs e)
     {
+        AddClient(namebox.Text, name2box.Text, emailbox.Text, phonebox.Text, addressbox.Text, pcodebox.Text, citybox.Text, notesbox.Text);
         Calendar calendar = new Calendar();
         calendar.Show();
         this.Hide();
@@ -346,9 +361,23 @@ public class Registering:Form
         e.Graphics.DrawLine(blackpen, 0, 40, 1200, 40);
         e.Graphics.DrawLine(boldpen, 195, 212, 875,212);
     }
+    public void AddClient(string n1, string n2, string n3, string n4, string n5, string n6, string n7, string n8)
+    {
+        Client client = new Client();
+        client.Name = n1;
+        client.Name2 = n2;
+        client.Email = n3;
+        client.Phone = n4;
+        client.Address = n5;
+        client.Pcode = n6;
+        client.City = n7;
+        client.Notes = n8;
+        clients.Add(client);
+    }
 }
 public class Calendar : Form
 {
+    List<Client> clients = new List<Client>();
     MonthCalendar calendario = new MonthCalendar();
     Button exit = new Button();
     DataGridView schedulegrid = new DataGridView();
