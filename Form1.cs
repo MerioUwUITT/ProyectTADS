@@ -400,6 +400,7 @@ public class Calendar : Form
             schedulegrid.Rows[i].Height = 50;
         }
         schedulegrid.Columns[1].Width = 1100;
+        schedulegrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
         schedule.Controls.Add(schedulegrid);
         
     }
