@@ -220,6 +220,87 @@ public class MiMBox : Form
         NativeMethods.DeleteObject(ptr);
     }
 }
+public class Menu:Form
+{
+    public Point mouseLocation;
+    Button exit = new Button();
+    Button Register = new Button();
+    Button MakeDate = new Button();
+    public Menu()
+    {
+        this.Size = new Size(400, 400);
+        this.FormBorderStyle = FormBorderStyle.None;
+        this.CenterToScreen();
+        this.Paint += new PaintEventHandler(Menu_Paint);
+        this.MouseDown += new MouseEventHandler(Menu_MouseDown);
+        this.MouseMove += new MouseEventHandler(Menu_MouseMove);
+        exit.Size = new Size(38, 38);
+        exit.Location = new Point(360,0);
+        exit.Text = "Exit";
+        exit.FlatStyle = FlatStyle.Flat;
+        exit.FlatAppearance.BorderSize = 0;
+        exit.Click += new EventHandler(exit_Click);
+        exit.Paint += new PaintEventHandler(exit_Paint);
+        this.Controls.Add(exit);
+        Register.Size = new Size(100, 50);
+        Register.Location = new Point(150, 100);
+        Register.Text = "Register";
+        Register.FlatStyle = FlatStyle.Flat;
+        Register.FlatAppearance.BorderSize = 0;
+        Register.Click += new EventHandler(Register_Click);
+        this.Controls.Add(Register);
+        MakeDate.Size = new Size(100, 50);
+        MakeDate.Location = new Point(150, 200);
+        MakeDate.Text = "Make Date";
+        MakeDate.FlatStyle = FlatStyle.Flat;
+        MakeDate.FlatAppearance.BorderSize = 0;
+        MakeDate.Click += new EventHandler(MakeDate_Click);
+        this.Controls.Add(MakeDate);
+    }
+    private void MakeDate_Click(object sender, EventArgs e)
+    {
+        this.Hide();
+        Calendar c = new Calendar();
+        c.Show();
+    }
+    private void Register_Click(object sender, EventArgs e)
+    {
+        this.Hide();
+        Registering r = new Registering();
+        r.Show();   
+    }
+    private void exit_Click(object sender, EventArgs e)
+    {
+        MiMBox box = new MiMBox();
+        box.Show();
+    }
+    private void exit_Paint(object sender, PaintEventArgs e)
+    {
+        Pen blackpen = new Pen(Color.Black, 2);
+        e.Graphics.DrawLine(blackpen, 9,9, 29, 29);
+        e.Graphics.DrawLine(blackpen, 9, 29, 29, 9);
+    }
+    private void Menu_MouseDown(object sender, MouseEventArgs e)
+    {
+        mouseLocation = new Point(-e.X, -e.Y);
+    }
+    private void Menu_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            Point mousePosition = Control.MousePosition;
+            mousePosition.Offset(mouseLocation.X, mouseLocation.Y);
+            Location = mousePosition;
+        }
+    }
+    private void Menu_Paint(object sender, PaintEventArgs e)
+    {
+        IntPtr ptr = NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20);
+        this.Region = System.Drawing.Region.FromHrgn(ptr);
+        NativeMethods.DeleteObject(ptr);
+        e.Graphics.DrawLine(new Pen(Color.Black, 2), 0, 40, 400, 40);
+    }
+}
 public class Client 
 {
     public string Name { get; set; }
