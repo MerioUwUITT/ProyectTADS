@@ -82,10 +82,8 @@ public partial class Form1 : Form
     {
         if (username.Text == "admin" && password.Text == "admin")
         {
-            Registering register = new Registering();
-            register.Show();
-            Calendar calendar = new Calendar();
-            calendar.Show();
+            Menu menu = new Menu();
+            menu.Show();
             this.Hide();
         }
         else
@@ -236,7 +234,6 @@ public class Menu:Form
         this.MouseMove += new MouseEventHandler(Menu_MouseMove);
         exit.Size = new Size(38, 38);
         exit.Location = new Point(360,0);
-        exit.Text = "Exit";
         exit.FlatStyle = FlatStyle.Flat;
         exit.FlatAppearance.BorderSize = 0;
         exit.Click += new EventHandler(exit_Click);
@@ -320,6 +317,7 @@ public class Registering:Form
     public static List<Client> clients = new List<Client>();
     Label instructions = new Label();
     Button exit = new Button();
+    Button goback = new Button();
     PictureBox owl = new PictureBox();
     Label name = new Label();
     Label name2 = new Label();
@@ -451,6 +449,28 @@ public class Registering:Form
         register.Click += new EventHandler(register_Click);
         this.MouseDown += new MouseEventHandler(Registering_MouseDown);
         this.MouseMove += new MouseEventHandler(Registering_MouseMove);
+        goback.Size = new Size(60, 38);
+        goback.Location = new Point(0, 0);
+        goback.FlatStyle = FlatStyle.Flat;
+        goback.FlatAppearance.BorderSize = 0;
+        goback.Click += new EventHandler(goback_Click);
+        goback.Paint += new PaintEventHandler(goback_Paint);
+        this.Controls.Add(goback);
+
+    }
+    private void goback_Click(object sender, EventArgs e)
+    {
+        this.Hide();
+        Menu menu = new Menu();
+        menu.Show();
+    }
+    private void goback_Paint(object sender, PaintEventArgs e)
+    {
+        Graphics g = e.Graphics;
+        g.FillPolygon(new SolidBrush(Color.Black), new Point[] { new Point(10, 20), new Point(28,10), new Point(28,30) });
+        g.DrawLine(new Pen(Color.Black, 3), 15, 20, 50, 20);
+
+
 
     }
     private void Registering_MouseDown(object sender, MouseEventArgs e)
@@ -514,6 +534,8 @@ public class Calendar : Form
     DataGridView schedulegrid = new DataGridView();
     Panel schedule = new Panel();
     ComboBox clientes = new ComboBox();
+    ComboBox hours = new ComboBox();
+    Button goback   = new Button();
     public Calendar()
     {
         this.Size = new Size(1600, 900);
@@ -564,7 +586,7 @@ public class Calendar : Form
         schedulegrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
         schedule.Controls.Add(schedulegrid);
         clientes.Size = new Size(200, 30);
-        clientes.Location = new Point(10, 10);
+        clientes.Location = new Point(10, 450);
         clientes.Font = new Font("Open Sans", 12);
         clientes.FlatStyle = FlatStyle.Flat;
         clientes.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -572,10 +594,44 @@ public class Calendar : Form
         this.Controls.Add(clientes);
         Registering.clients.ForEach(delegate(Client client)
         {
-            clientes.Items.Add(client.Name);
+            clientes.Items.Add(client.Name+" "+client.Name2);
         });
+        hours.Size = new Size(200, 30);
+        hours.Location = new Point(10, 500);
+        hours.Font = new Font("Open Sans", 12);
+        hours.FlatStyle = FlatStyle.Flat;
+        hours.DropDownStyle = ComboBoxStyle.DropDownList;
+        hours.BackColor = Color.White;
+        this.Controls.Add(hours);
+        for (int i = 8; i < 22; i++)
+        {
+            hours.Items.Add(i+":00");
+        }
         this.MouseDown += new MouseEventHandler(Calendar_MouseDown);
         this.MouseMove += new MouseEventHandler(Calendar_MouseMove);
+        goback.Size = new Size(60, 38);
+        goback.Location = new Point(0, 0);
+        goback.FlatStyle = FlatStyle.Flat;
+        goback.FlatAppearance.BorderSize = 0;
+        goback.BackColor = Color.White;
+        this.Controls.Add(goback);
+        goback.Paint += new PaintEventHandler(goback_Paint);
+        goback.Click += new EventHandler(goback_Click);
+    }
+    private void goback_Click(object sender, EventArgs e)
+    {
+        this.Hide();
+        Menu menu = new Menu();
+        menu.Show();
+    }
+    private void goback_Paint(object sender, PaintEventArgs e)
+    {
+        Graphics g = e.Graphics;
+        g.FillPolygon(new SolidBrush(Color.Black), new Point[] { new Point(10, 20), new Point(28,10), new Point(28,30) });
+        g.DrawLine(new Pen(Color.Black, 3), 15, 20, 50, 20);
+
+
+
     }
     private void Calendar_MouseDown(object sender, MouseEventArgs e)
     {
