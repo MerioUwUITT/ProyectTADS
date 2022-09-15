@@ -1,6 +1,7 @@
 namespace ProjectTADS;
 public partial class Form1 : Form
 {
+    public Point mouseLocation;
     PictureBox LDLogo = new PictureBox();
     Button exit = new Button();
     TextBox username = new TextBox();
@@ -60,6 +61,21 @@ public partial class Form1 : Form
         LoginButton.FlatStyle = FlatStyle.Flat;
         LoginButton.FlatAppearance.BorderSize = 0;
         this.Controls.Add(LoginButton);
+        this.MouseDown += new MouseEventHandler(Form1_MouseDown);
+        this.MouseMove += new MouseEventHandler(Form1_MouseMove);
+    }
+    private void Form1_MouseDown(object sender, MouseEventArgs e)
+    {
+        mouseLocation = new Point(-e.X, -e.Y);
+    }
+    private void Form1_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            Point mousePosition = Control.MousePosition;
+            mousePosition.Offset(mouseLocation.X, mouseLocation.Y);
+            Location = mousePosition;
+        }
     }
     
     private void LoginButton_Click(object sender, EventArgs e)
@@ -68,6 +84,8 @@ public partial class Form1 : Form
         {
             Registering register = new Registering();
             register.Show();
+            Calendar calendar = new Calendar();
+            calendar.Show();
             this.Hide();
         }
         else
@@ -118,6 +136,7 @@ class NativeMethods
 }
 public class MiMBox : Form
 {   
+    public Point mouseLocation;
     Label exitlabel = new Label();
     Label warning = new Label();
     public Panel cuerpo = new Panel();
@@ -160,7 +179,23 @@ public class MiMBox : Form
         exitlabel.Size = new Size(100, 30);
         exitlabel.Location = new Point(170, 8);
         cuerpo.Controls.Add(exitlabel);
+        cuerpo.MouseDown += new MouseEventHandler(cuerpo_MouseDown);
+        cuerpo.MouseMove += new MouseEventHandler(cuerpo_MouseMove);
     }
+    private void cuerpo_MouseDown(object sender, MouseEventArgs e)
+    {
+        mouseLocation = new Point(-e.X, -e.Y);
+    }
+    private void cuerpo_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            Point mousePosition = Control.MousePosition;
+            mousePosition.Offset(mouseLocation.X, mouseLocation.Y);
+            Location = mousePosition;
+        }
+    }
+
     private void yes_Click(object sender, EventArgs e)
     {
         Application.Exit();
@@ -200,7 +235,8 @@ public class Client
 }
 public class Registering:Form
 {
-    List<Client> clients = new List<Client>();
+    public Point mouseLocation;
+    public static List<Client> clients = new List<Client>();
     Label instructions = new Label();
     Button exit = new Button();
     PictureBox owl = new PictureBox();
@@ -332,13 +368,27 @@ public class Registering:Form
         register.FlatAppearance.BorderSize = 0;
         this.Controls.Add(register);
         register.Click += new EventHandler(register_Click);
+        this.MouseDown += new MouseEventHandler(Registering_MouseDown);
+        this.MouseMove += new MouseEventHandler(Registering_MouseMove);
+
     }
+    private void Registering_MouseDown(object sender, MouseEventArgs e)
+    {
+        mouseLocation = new Point(-e.X, -e.Y);
+    }
+    private void Registering_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            Point mousePosition = Control.MousePosition;
+            mousePosition.Offset(mouseLocation.X, mouseLocation.Y);
+            Location = mousePosition;
+        }
+    }
+
     private void register_Click(object sender, EventArgs e)
     {
         AddClient(namebox.Text, name2box.Text, emailbox.Text, phonebox.Text, addressbox.Text, pcodebox.Text, citybox.Text, notesbox.Text);
-        Calendar calendar = new Calendar();
-        calendar.Show();
-        this.Hide();
     }
     private void exit_Click(object sender, EventArgs e)
     {
@@ -377,11 +427,12 @@ public class Registering:Form
 }
 public class Calendar : Form
 {
-    List<Client> clients = new List<Client>();
+    public Point mouseLocation;
     MonthCalendar calendario = new MonthCalendar();
     Button exit = new Button();
     DataGridView schedulegrid = new DataGridView();
     Panel schedule = new Panel();
+    ComboBox clientes = new ComboBox();
     public Calendar()
     {
         this.Size = new Size(1600, 900);
@@ -431,7 +482,32 @@ public class Calendar : Form
         schedulegrid.Columns[1].Width = 1100;
         schedulegrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
         schedule.Controls.Add(schedulegrid);
-        
+        clientes.Size = new Size(200, 30);
+        clientes.Location = new Point(10, 10);
+        clientes.Font = new Font("Open Sans", 12);
+        clientes.FlatStyle = FlatStyle.Flat;
+        clientes.DropDownStyle = ComboBoxStyle.DropDownList;
+        clientes.BackColor = Color.White;
+        this.Controls.Add(clientes);
+        Registering.clients.ForEach(delegate(Client client)
+        {
+            clientes.Items.Add(client.Name);
+        });
+        this.MouseDown += new MouseEventHandler(Calendar_MouseDown);
+        this.MouseMove += new MouseEventHandler(Calendar_MouseMove);
+    }
+    private void Calendar_MouseDown(object sender, MouseEventArgs e)
+    {
+        mouseLocation = new Point(-e.X, -e.Y);
+    }
+    private void Calendar_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            Point mousePosition = Control.MousePosition;
+            mousePosition.Offset(mouseLocation.X, mouseLocation.Y);
+            Location = mousePosition;
+        }
     }
     private void exit_Click(object sender, EventArgs e)
     {
