@@ -230,6 +230,7 @@ public class Menu:Form
         this.Size = new Size(400, 400);
         this.FormBorderStyle = FormBorderStyle.None;
         this.CenterToScreen();
+        this.BackColor = Color.Moccasin;
         this.Paint += new PaintEventHandler(Menu_Paint);
         this.MouseDown += new MouseEventHandler(Menu_MouseDown);
         this.MouseMove += new MouseEventHandler(Menu_MouseMove);
@@ -240,23 +241,23 @@ public class Menu:Form
         exit.Click += new EventHandler(exit_Click);
         exit.Paint += new PaintEventHandler(exit_Paint);
         this.Controls.Add(exit);
-        Register.Size = new Size(100, 50);
-        Register.Location = new Point(150, 100);
+        Register.Size = new Size(200, 100);
+        Register.Location = new Point(100, 100);
         Register.Text = "Register";
         Register.FlatStyle = FlatStyle.Flat;
         Register.FlatAppearance.BorderSize = 0;
         Register.Click += new EventHandler(Register_Click);
         this.Controls.Add(Register);
-        MakeDate.Size = new Size(100, 50);
-        MakeDate.Location = new Point(150, 200);
+        MakeDate.Size = new Size(200, 100);
+        MakeDate.Location = new Point(100, 200);
         MakeDate.Text = "Make Date";
         MakeDate.FlatStyle = FlatStyle.Flat;
         MakeDate.FlatAppearance.BorderSize = 0;
         MakeDate.Click += new EventHandler(MakeDate_Click);
         this.Controls.Add(MakeDate);
         emptylistwarning.Text = "There are no registered users";
-        emptylistwarning.Size = new Size(300, 50);
-        emptylistwarning.Location = new Point(50, 300);
+        emptylistwarning.Size = new Size(200, 50);
+        emptylistwarning.Location = new Point(100, 300);
         if(RegisterScreen.clients.Count == 0)
         {
             emptylistwarning.Visible = true;
@@ -269,9 +270,17 @@ public class Menu:Form
     }
     private void MakeDate_Click(object sender, EventArgs e)
     {
-        this.Hide();
-        Calendar c = new Calendar();
-        c.Show();
+        if(RegisterScreen.clients.Count == 0)
+        {
+           MiMbox mbox = new MiMbox();
+              mbox.Show();
+        }
+        else
+        {
+            this.Hide();
+            Calendar c = new Calendar();
+            c.Show();
+        }
     }
     private void Register_Click(object sender, EventArgs e)
     {
@@ -310,6 +319,68 @@ public class Menu:Form
         NativeMethods.DeleteObject(ptr);
         e.Graphics.DrawLine(new Pen(Color.Black, 2), 0, 40, 400, 40);
     }
+}
+public class MiMbox : Form
+{
+    public Point mouseLocation;
+    Button exit = new Button();
+    public MiMbox()
+    {
+        this.Size = new Size(400, 200);
+        this.FormBorderStyle = FormBorderStyle.None;
+        this.CenterToScreen();
+        this.BackColor = Color.Linen;
+        this.Paint += new PaintEventHandler(MiMbox_Paint);
+        this.MouseDown += new MouseEventHandler(MiMbox_MouseDown);
+        this.MouseMove += new MouseEventHandler(MiMbox_MouseMove);
+        exit.Size = new Size(38, 38);
+        exit.Location = new Point(360, 0);
+        exit.FlatStyle = FlatStyle.Flat;
+        exit.FlatAppearance.BorderSize = 0;
+        exit.Click += new EventHandler(exit_Click);
+        exit.Paint += new PaintEventHandler(exit_Paint);
+        if (RegisterScreen.clients.Count == 0)
+        {
+            Label emptyclientwarning = new Label();
+            emptyclientwarning.Text = "There are no registered users";
+            emptyclientwarning.Size = new Size(200, 50);
+            emptyclientwarning.Location = new Point(100, 100);
+            this.Controls.Add(emptyclientwarning);
+        }
+        this.Controls.Add(exit);
+    }
+    private void exit_Click(object sender, EventArgs e)
+    {
+        this.Close();
+    }
+    private void exit_Paint(object sender, PaintEventArgs e)
+    {
+        Pen blackpen = new Pen(Color.Black, 2);
+        e.Graphics.DrawLine(blackpen, 9, 9, 29, 29);
+        e.Graphics.DrawLine(blackpen, 9, 29, 29, 9);
+    }
+
+    private void MiMbox_MouseDown(object sender, MouseEventArgs e)
+    {
+        mouseLocation = new Point(-e.X, -e.Y);
+    }
+    private void MiMbox_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            Point mousePosition = Control.MousePosition;
+            mousePosition.Offset(mouseLocation.X, mouseLocation.Y);
+            Location = mousePosition;
+        }
+    }
+    private void MiMbox_Paint(object sender, PaintEventArgs e)
+    {
+        IntPtr ptr = NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20);
+        this.Region = System.Drawing.Region.FromHrgn(ptr);
+        NativeMethods.DeleteObject(ptr);
+        e.Graphics.DrawLine(new Pen(Color.Black, 2), 0, 40, 400, 40);
+    }
+
 }
 public class Client 
 {
