@@ -100,7 +100,7 @@ public partial class Form1 : Form
     
     private void exit_Click(object sender, EventArgs e)
     {
-        MiMBox exitmbox = new MiMBox();
+        ExitScreen exitmbox = new ExitScreen();
         exitmbox.Show();
     }
     private void Form1_Paint(object sender, PaintEventArgs e)
@@ -132,7 +132,7 @@ class NativeMethods
     [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
     public static extern bool SendMessage(System.IntPtr hWnd, int Msg, int wParam, int lParam);
 }
-public class MiMBox : Form
+public class ExitScreen : Form
 {   
     public Point mouseLocation;
     Label exitlabel = new Label();
@@ -140,12 +140,12 @@ public class MiMBox : Form
     public Panel cuerpo = new Panel();
     Button yes = new Button();
     Button no = new Button();
-    public MiMBox()
+    public ExitScreen()
     {
         Font f = new Font("Open Sans", 12);
         this.Size = new Size(404, 204);
         this.FormBorderStyle = FormBorderStyle.None;
-        this.Paint += new PaintEventHandler(MiMBox_Paint);
+        this.Paint += new PaintEventHandler(ExitScreen_Paint);
         this.BackColor = Color.Black;
         cuerpo.Size = new Size(400, 200);
         cuerpo.Location = new Point(2,2);
@@ -210,7 +210,7 @@ public class MiMBox : Form
         Pen blackpen = new Pen(Color.Black, 2);
         e.Graphics.DrawLine(blackpen, 0, 40, 400, 40);
     }
-    private void MiMBox_Paint(object sender, PaintEventArgs e)
+    private void ExitScreen_Paint(object sender, PaintEventArgs e)
     {
         Pen blackpen = new Pen(Color.Black, 2);
         IntPtr ptr = NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20);
@@ -224,6 +224,7 @@ public class Menu:Form
     Button exit = new Button();
     Button Register = new Button();
     Button MakeDate = new Button();
+    Label emptylistwarning = new Label();
     public Menu()
     {
         this.Size = new Size(400, 400);
@@ -253,6 +254,18 @@ public class Menu:Form
         MakeDate.FlatAppearance.BorderSize = 0;
         MakeDate.Click += new EventHandler(MakeDate_Click);
         this.Controls.Add(MakeDate);
+        emptylistwarning.Text = "There are no registered users";
+        emptylistwarning.Size = new Size(300, 50);
+        emptylistwarning.Location = new Point(50, 300);
+        if(RegisterScreen.clients.Count == 0)
+        {
+            emptylistwarning.Visible = true;
+        }
+        else
+        {
+            emptylistwarning.Visible = false;
+        }
+        this.Controls.Add(emptylistwarning);
     }
     private void MakeDate_Click(object sender, EventArgs e)
     {
@@ -263,12 +276,12 @@ public class Menu:Form
     private void Register_Click(object sender, EventArgs e)
     {
         this.Hide();
-        Registering r = new Registering();
+        RegisterScreen r = new RegisterScreen();
         r.Show();   
     }
     private void exit_Click(object sender, EventArgs e)
     {
-        MiMBox box = new MiMBox();
+        ExitScreen box = new ExitScreen();
         box.Show();
     }
     private void exit_Paint(object sender, PaintEventArgs e)
@@ -311,7 +324,8 @@ public class Client
     
 
 }
-public class Registering:Form
+
+public class RegisterScreen:Form
 {
     public Point mouseLocation;
     public static List<Client> clients = new List<Client>();
@@ -337,12 +351,12 @@ public class Registering:Form
     TextBox notesbox = new TextBox();
 
     Button register = new Button();
-    public Registering()
+    public RegisterScreen()
     {
         Font dafont = new Font("Open Sans", 20);
         this.Size = new Size(1200, 850);
         this.FormBorderStyle = FormBorderStyle.None;
-        this.Paint += new PaintEventHandler(Registering_Paint);
+        this.Paint += new PaintEventHandler(RegisterScreen_Paint);
         this.BackColor = Color.DarkSeaGreen;
         this.CenterToScreen();
         exit.Size = new Size(38,38);
@@ -447,8 +461,8 @@ public class Registering:Form
         register.FlatAppearance.BorderSize = 0;
         this.Controls.Add(register);
         register.Click += new EventHandler(register_Click);
-        this.MouseDown += new MouseEventHandler(Registering_MouseDown);
-        this.MouseMove += new MouseEventHandler(Registering_MouseMove);
+        this.MouseDown += new MouseEventHandler(RegisterScreen_MouseDown);
+        this.MouseMove += new MouseEventHandler(RegisterScreen_MouseMove);
         goback.Size = new Size(60, 38);
         goback.Location = new Point(0, 0);
         goback.FlatStyle = FlatStyle.Flat;
@@ -473,11 +487,11 @@ public class Registering:Form
 
 
     }
-    private void Registering_MouseDown(object sender, MouseEventArgs e)
+    private void RegisterScreen_MouseDown(object sender, MouseEventArgs e)
     {
         mouseLocation = new Point(-e.X, -e.Y);
     }
-    private void Registering_MouseMove(object sender, MouseEventArgs e)
+    private void RegisterScreen_MouseMove(object sender, MouseEventArgs e)
     {
         if (e.Button == MouseButtons.Left)
         {
@@ -493,7 +507,7 @@ public class Registering:Form
     }
     private void exit_Click(object sender, EventArgs e)
     {
-        MiMBox exitmbox = new MiMBox();
+        ExitScreen exitmbox = new ExitScreen();
         exitmbox.Show();
     }
     private void exit_Paint(object sender, PaintEventArgs e)
@@ -502,7 +516,7 @@ public class Registering:Form
         e.Graphics.DrawLine(blackpen, 9, 9, 29, 29);
         e.Graphics.DrawLine(blackpen, 9, 29, 29, 9);
     }
-    private void Registering_Paint(object sender, PaintEventArgs e)
+    private void RegisterScreen_Paint(object sender, PaintEventArgs e)
     {
         IntPtr ptr = NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20);
         this.Region = System.Drawing.Region.FromHrgn(ptr);
@@ -531,14 +545,17 @@ public class Calendar : Form
     public Point mouseLocation;
     MonthCalendar calendario = new MonthCalendar();
     Button exit = new Button();
-    DataGridView schedulegrid = new DataGridView();
     Panel schedule = new Panel();
     ComboBox clientes = new ComboBox();
-    ComboBox hours = new ComboBox();
     Button goback   = new Button();
+    Button btn  = new Button();
+    DataGridView grid = new DataGridView();
+    DataGridViewCheckBoxColumn Selected = new DataGridViewCheckBoxColumn();
+    DataGridViewTextBoxColumn Hour = new DataGridViewTextBoxColumn();
+    DataGridViewTextBoxColumn Client = new DataGridViewTextBoxColumn();
     public Calendar()
     {
-        this.Size = new Size(1600, 900);
+        this.Size = new Size(1520, 600);
         this.CenterToScreen();
         this.FormBorderStyle = FormBorderStyle.None;
         this.BackColor = Color.White;
@@ -548,65 +565,29 @@ public class Calendar : Form
         calendario.Paint += new PaintEventHandler(calendario_Paint);
         this.Controls.Add(calendario);
         exit.Size = new Size(38, 38);
-        exit.Location = new Point(1540, 0);
+        exit.Location = new Point(1460, 0);
         exit.FlatStyle = FlatStyle.Flat;
         exit.FlatAppearance.BorderSize = 0;
         exit.BackColor = Color.White;
         this.Controls.Add(exit);
         exit.Paint += new PaintEventHandler(exit_Paint);
         exit.Click += new EventHandler(exit_Click);
-        schedule.Size = new Size(1290, 780);
+        schedule.Size = new Size(1300, 780);
         schedule.Location = new Point(280, 50);
         schedule.BackColor = Color.White;
         schedule.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         this.Controls.Add(schedule);
-        schedulegrid.Size = new Size(1290, 780);
-        schedulegrid.ColumnCount = 2;
-        schedulegrid.Columns[0].Name = "Time";
-        schedulegrid.Columns[1].Name = "Dates";
-        schedulegrid.Rows.Add("8:00", "", "", "");
-        schedulegrid.Rows.Add("9:00", "", "", "");
-        schedulegrid.Rows.Add("10:00", "", "", "");
-        schedulegrid.Rows.Add("11:00", "", "", "");
-        schedulegrid.Rows.Add("12:00", "", "", "");
-        schedulegrid.Rows.Add("13:00", "", "", "");
-        schedulegrid.Rows.Add("14:00", "", "", "");
-        schedulegrid.Rows.Add("15:00", "", "", "");
-        schedulegrid.Rows.Add("16:00", "", "", "");
-        schedulegrid.Rows.Add("17:00", "", "", "");
-        schedulegrid.Rows.Add("18:00", "", "", "");
-        schedulegrid.Rows.Add("19:00", "", "", "");
-        schedulegrid.Rows.Add("20:00", "", "", "");
-        schedulegrid.Rows.Add("21:00", "", "", "");
-        for (int i = 0; i < 14; i++)
-        {
-            schedulegrid.Rows[i].Height = 50;
-        }
-        schedulegrid.Columns[1].Width = 1100;
-        schedulegrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
-        schedule.Controls.Add(schedulegrid);
+        
         clientes.Size = new Size(200, 30);
-        clientes.Location = new Point(10, 450);
+        clientes.Location = new Point(50, 440);
         clientes.Font = new Font("Open Sans", 12);
-        clientes.FlatStyle = FlatStyle.Flat;
         clientes.DropDownStyle = ComboBoxStyle.DropDownList;
         clientes.BackColor = Color.White;
         this.Controls.Add(clientes);
-        Registering.clients.ForEach(delegate(Client client)
+        RegisterScreen.clients.ForEach(delegate(Client client)
         {
             clientes.Items.Add(client.Name+" "+client.Name2);
         });
-        hours.Size = new Size(200, 30);
-        hours.Location = new Point(10, 500);
-        hours.Font = new Font("Open Sans", 12);
-        hours.FlatStyle = FlatStyle.Flat;
-        hours.DropDownStyle = ComboBoxStyle.DropDownList;
-        hours.BackColor = Color.White;
-        this.Controls.Add(hours);
-        for (int i = 8; i < 22; i++)
-        {
-            hours.Items.Add(i+":00");
-        }
         this.MouseDown += new MouseEventHandler(Calendar_MouseDown);
         this.MouseMove += new MouseEventHandler(Calendar_MouseMove);
         goback.Size = new Size(60, 38);
@@ -617,6 +598,73 @@ public class Calendar : Form
         this.Controls.Add(goback);
         goback.Paint += new PaintEventHandler(goback_Paint);
         goback.Click += new EventHandler(goback_Click);
+        btn.Size = new Size(200, 30);
+        btn.Location = new Point(50, 490);
+        btn.FlatStyle = FlatStyle.Flat;
+        btn.FlatAppearance.BorderSize = 0;
+        btn.BackColor = Color.FromArgb(0, 122, 204);
+        btn.ForeColor = Color.White;
+        btn.Font = new Font("Open Sans", 12);
+        btn.Text = "Add";
+        this.Controls.Add(btn);
+        btn.Click += new EventHandler(btn_Click);
+        grid.Size = new Size(1250, 600);
+        grid.Location = new Point(0, 0);
+        grid.Columns.Add(Selected);
+        grid.Columns.Add(Hour);
+        grid.Columns.Add(Client);
+        grid.Columns[0].Width = 50;
+        grid.Columns[1].Width = 100;
+        grid.Columns[2].Width = 1050;
+        grid.Columns[0].HeaderText = "Selected";
+        grid.Columns[1].HeaderText = "Hour";
+        grid.Columns[2].HeaderText = "Client";
+        grid.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        grid.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        grid.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        grid.AllowUserToAddRows = false;
+        grid.AllowUserToDeleteRows = false;
+        grid.AllowUserToResizeColumns = false;
+        grid.AllowUserToResizeRows = false;
+        grid.RowHeadersVisible = false;
+        grid.BackgroundColor = Color.White;
+        grid.BorderStyle = BorderStyle.None;
+        grid.CellClick += new DataGridViewCellEventHandler(grid_CellClick);
+        for(int i=0; i<17; i++)
+        {
+            if(i>=8 && i<=16)
+            {
+                grid.Rows.Add(false, i+":00", "");
+            }
+        }
+        foreach (DataGridViewRow row in grid.Rows)
+        {
+            row.Height = 50;
+        }
+        schedule.Controls.Add(grid);
+    }
+    void grid_CellClick(object sender, DataGridViewCellEventArgs e)
+    {
+        if (e.RowIndex >= 0 && e.ColumnIndex == 0)
+    {
+        //Loop and uncheck all other CheckBoxes.
+        foreach (DataGridViewRow row in grid.Rows)
+        {
+            if (row.Index == e.RowIndex)
+            {
+                row.Cells[0].Value = !Convert.ToBoolean(row.Cells[0].EditedFormattedValue);
+            }
+            else
+            {
+                row.Cells[0].Value = false;
+            }
+        }
+    }
+
+    }
+    public void btn_Click(object sender, EventArgs e)
+    {
+        
     }
     private void goback_Click(object sender, EventArgs e)
     {
@@ -648,7 +696,7 @@ public class Calendar : Form
     }
     private void exit_Click(object sender, EventArgs e)
     {
-        MiMBox exit = new MiMBox();
+        ExitScreen exit = new ExitScreen();
         exit.Show();
     }
     private void exit_Paint(object sender, PaintEventArgs e)
@@ -674,3 +722,11 @@ public class Calendar : Form
     }
 }
 
+public class Appointment
+
+{
+    public DateTime day { get; set; }
+    public int hour { get; set; }
+    public string clientname { get; set; }
+    public string clientname2 { get; set; }
+}
