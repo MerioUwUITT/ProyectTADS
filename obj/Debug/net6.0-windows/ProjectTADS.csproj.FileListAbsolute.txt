@@ -28,3 +28,10 @@ C:\Users\super\Documents\ProjectTADS\ProyectTADS\obj\Debug\net6.0-windows\refint
 C:\Users\super\Documents\ProjectTADS\ProyectTADS\obj\Debug\net6.0-windows\ProjectTADS.pdb
 C:\Users\super\Documents\ProjectTADS\ProyectTADS\obj\Debug\net6.0-windows\ProjectTADS.genruntimeconfig.cache
 C:\Users\super\Documents\ProjectTADS\ProyectTADS\obj\Debug\net6.0-windows\ref\ProjectTADS.dll
+C:\Users\super\Documents\ProjectTADS\ProyectTADS\bin\Debug\net6.0-windows\System.Data.SqlClient.dll
+C:\Users\super\Documents\ProjectTADS\ProyectTADS\bin\Debug\net6.0-windows\runtimes\win-arm64\native\sni.dll
+C:\Users\super\Documents\ProjectTADS\ProyectTADS\bin\Debug\net6.0-windows\runtimes\win-x64\native\sni.dll
+C:\Users\super\Documents\ProjectTADS\ProyectTADS\bin\Debug\net6.0-windows\runtimes\win-x86\native\sni.dll
+C:\Users\super\Documents\ProjectTADS\ProyectTADS\bin\Debug\net6.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\super\Documents\ProjectTADS\ProyectTADS\bin\Debug\net6.0-windows\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\super\Documents\ProjectTADS\ProyectTADS\obj\Debug\net6.0-windows\ProjectTADS.csproj.CopyComplete

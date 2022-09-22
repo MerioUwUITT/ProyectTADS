@@ -1,3 +1,5 @@
+using System.Data.SqlClient;
+using System.Data;
 namespace ProjectTADS;
 public partial class Form1 : Form
 {
@@ -10,6 +12,8 @@ public partial class Form1 : Form
     Label passwordLabel = new Label();
     Label LoginLabel = new Label();
     Button LoginButton = new Button();
+    SqlConnection conn = new SqlConnection( "Data Source=ELMERIOUWU; Initial Catalog=AppointmentsDB; Integrated Security=True");//sql instance
+
     public Form1()
     {
         Font font = new Font("Open Sans", 12);
@@ -80,15 +84,28 @@ public partial class Form1 : Form
     
     private void LoginButton_Click(object sender, EventArgs e)
     {
-        if (username.Text == "admin" && password.Text == "admin")
+        conn.Open();
+        if(username.Text == "" || password.Text == "")
         {
-            Menu menu = new Menu();
-            menu.Show();
-            this.Hide();
+            MessageBox.Show("Please enter a username and password");
         }
         else
         {
-            MessageBox.Show("Login Failed");
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Master WHERE Username = @Username AND Passphrase = @Password", conn);
+            cmd.Parameters.AddWithValue("@Username", username.Text);
+            cmd.Parameters.AddWithValue("@Password", password.Text);
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                MessageBox.Show("Login Successful");
+                this.Hide();
+                Menu menu = new Menu();
+                menu.Show();
+            }
+            else
+            {
+                MessageBox.Show("Login Failed");
+            }
         }
     }
     private void exit_Paint(object sender, PaintEventArgs e)
@@ -225,6 +242,7 @@ public class Menu:Form
     Button Register = new Button();
     Button MakeDate = new Button();
     Label emptylistwarning = new Label();
+    SqlConnection conn = new SqlConnection( "Data Source=ELMERIOUWU; Initial Catalog=AppointmentsDB; Integrated Security=True");//sql instance
     public Menu()
     {
         this.Size = new Size(400, 400);
@@ -255,32 +273,12 @@ public class Menu:Form
         MakeDate.FlatAppearance.BorderSize = 0;
         MakeDate.Click += new EventHandler(MakeDate_Click);
         this.Controls.Add(MakeDate);
-        emptylistwarning.Text = "There are no registered users";
-        emptylistwarning.Size = new Size(200, 50);
-        emptylistwarning.Location = new Point(100, 300);
-        if(RegisterScreen.clients.Count == 0)
-        {
-            emptylistwarning.Visible = true;
-        }
-        else
-        {
-            emptylistwarning.Visible = false;
-        }
-        this.Controls.Add(emptylistwarning);
     }
     private void MakeDate_Click(object sender, EventArgs e)
     {
-        if(RegisterScreen.clients.Count == 0)
-        {
-           MiMbox mbox = new MiMbox();
-              mbox.Show();
-        }
-        else
-        {
             this.Hide();
             Calendar c = new Calendar();
             c.Show();
-        }
     }
     private void Register_Click(object sender, EventArgs e)
     {
@@ -322,68 +320,6 @@ public class Menu:Form
 }
 public class MiMbox : Form
 {
-    public Point mouseLocation;
-    Button exit = new Button();
-    public MiMbox()
-    {
-        this.Size = new Size(400, 200);
-        this.FormBorderStyle = FormBorderStyle.None;
-        this.CenterToScreen();
-        this.BackColor = Color.Linen;
-        this.Paint += new PaintEventHandler(MiMbox_Paint);
-        this.MouseDown += new MouseEventHandler(MiMbox_MouseDown);
-        this.MouseMove += new MouseEventHandler(MiMbox_MouseMove);
-        exit.Size = new Size(38, 38);
-        exit.Location = new Point(360, 0);
-        exit.FlatStyle = FlatStyle.Flat;
-        exit.FlatAppearance.BorderSize = 0;
-        exit.Click += new EventHandler(exit_Click);
-        exit.Paint += new PaintEventHandler(exit_Paint);
-        if (RegisterScreen.clients.Count == 0)
-        {
-            Label emptyclientwarning = new Label();
-            emptyclientwarning.Text = "There are no registered users";
-            emptyclientwarning.Size = new Size(200, 50);
-            emptyclientwarning.Location = new Point(100, 100);
-            this.Controls.Add(emptyclientwarning);
-        }
-        this.Controls.Add(exit);
-    }
-    private void exit_Click(object sender, EventArgs e)
-    {
-        this.Close();
-    }
-    private void exit_Paint(object sender, PaintEventArgs e)
-    {
-        Pen blackpen = new Pen(Color.Black, 2);
-        e.Graphics.DrawLine(blackpen, 9, 9, 29, 29);
-        e.Graphics.DrawLine(blackpen, 9, 29, 29, 9);
-    }
-
-    private void MiMbox_MouseDown(object sender, MouseEventArgs e)
-    {
-        mouseLocation = new Point(-e.X, -e.Y);
-    }
-    private void MiMbox_MouseMove(object sender, MouseEventArgs e)
-    {
-        if (e.Button == MouseButtons.Left)
-        {
-            Point mousePosition = Control.MousePosition;
-            mousePosition.Offset(mouseLocation.X, mouseLocation.Y);
-            Location = mousePosition;
-        }
-    }
-    private void MiMbox_Paint(object sender, PaintEventArgs e)
-    {
-        IntPtr ptr = NativeMethods.CreateRoundRectRgn(0, 0, this.Width, this.Height, 20, 20);
-        this.Region = System.Drawing.Region.FromHrgn(ptr);
-        NativeMethods.DeleteObject(ptr);
-        e.Graphics.DrawLine(new Pen(Color.Black, 2), 0, 40, 400, 40);
-    }
-
-}
-public class Client 
-{
     public string Name { get; set; }
     public string Name2 { get; set; }
     public string Email { get; set; }
@@ -399,7 +335,6 @@ public class Client
 public class RegisterScreen:Form
 {
     public Point mouseLocation;
-    public static List<Client> clients = new List<Client>();
     Label instructions = new Label();
     Button exit = new Button();
     Button goback = new Button();
@@ -420,6 +355,7 @@ public class RegisterScreen:Form
     TextBox pcodebox = new TextBox();
     TextBox citybox = new TextBox();
     TextBox notesbox = new TextBox();
+    SqlConnection conn = new SqlConnection( "Data Source=ELMERIOUWU; Initial Catalog=AppointmentsDB; Integrated Security=True");//sql instance
 
     Button register = new Button();
     public RegisterScreen()
@@ -574,7 +510,32 @@ public class RegisterScreen:Form
 
     private void register_Click(object sender, EventArgs e)
     {
-        AddClient(namebox.Text, name2box.Text, emailbox.Text, phonebox.Text, addressbox.Text, pcodebox.Text, citybox.Text, notesbox.Text);
+        conn.Open();
+        SqlCommand cmd = new SqlCommand();
+        string statement = "SELECT COUNT(*) FROM Client";
+        int count = 0;
+        using(cmd)
+
+        {
+           using(SqlCommand cmd2 = new SqlCommand(statement, conn))
+           {
+               count = (int)cmd2.ExecuteScalar();
+           }
+        }
+        cmd.Connection = conn;
+        cmd.CommandType = CommandType.Text;
+        cmd.CommandText = "INSERT INTO Client (IDClient, NameClient, EmailClient, AddressClient, PostalCode, City, Notes, PhoneClient) VALUES (@ID, @NameClient, @EmailClient, @AddressClient, @PostalCode, @City, @Notes, @PhoneClient)";
+        string name = namebox.Text + " " + name2box.Text;
+        cmd.Parameters.AddWithValue("@ID", count + 1);
+        cmd.Parameters.AddWithValue("@NameClient", name);
+        cmd.Parameters.AddWithValue("@EmailClient", emailbox.Text);
+        cmd.Parameters.AddWithValue("@AddressClient", addressbox.Text);
+        cmd.Parameters.AddWithValue("@PostalCode", pcodebox.Text);
+        cmd.Parameters.AddWithValue("@City", citybox.Text);
+        cmd.Parameters.AddWithValue("@Notes", notesbox.Text);
+        cmd.Parameters.AddWithValue("@PhoneClient", phonebox.Text);
+        cmd.ExecuteNonQuery();
+        System.Windows.Forms.MessageBox.Show("Registered");
     }
     private void exit_Click(object sender, EventArgs e)
     {
@@ -597,19 +558,6 @@ public class RegisterScreen:Form
         e.Graphics.DrawLine(blackpen, 0, 40, 1200, 40);
         e.Graphics.DrawLine(boldpen, 195, 212, 875,212);
     }
-    public void AddClient(string n1, string n2, string n3, string n4, string n5, string n6, string n7, string n8)
-    {
-        Client client = new Client();
-        client.Name = n1;
-        client.Name2 = n2;
-        client.Email = n3;
-        client.Phone = n4;
-        client.Address = n5;
-        client.Pcode = n6;
-        client.City = n7;
-        client.Notes = n8;
-        clients.Add(client);
-    }
 }
 public class Calendar : Form
 {
@@ -618,15 +566,17 @@ public class Calendar : Form
     Button exit = new Button();
     Panel schedule = new Panel();
     ComboBox clientes = new ComboBox();
+    ComboBox lawyers = new ComboBox();
     Button goback   = new Button();
     Button btn  = new Button();
     DataGridView grid = new DataGridView();
     DataGridViewCheckBoxColumn Selected = new DataGridViewCheckBoxColumn();
     DataGridViewTextBoxColumn Hour = new DataGridViewTextBoxColumn();
     DataGridViewTextBoxColumn Client = new DataGridViewTextBoxColumn();
+    SqlConnection conn = new SqlConnection("Data Source=ELMERIOUWU;Initial Catalog=AppointmentsDB;Integrated Security=True");
     public Calendar()
     {
-        this.Size = new Size(1520, 600);
+        this.Size = new Size(1520, 620);
         this.CenterToScreen();
         this.FormBorderStyle = FormBorderStyle.None;
         this.BackColor = Color.White;
@@ -648,17 +598,50 @@ public class Calendar : Form
         schedule.BackColor = Color.White;
         schedule.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         this.Controls.Add(schedule);
-        
+        List <string> clients = new List<string>();
+        conn.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandType = CommandType.Text;
+        cmd.CommandText = "SELECT NameClient FROM Client";
+        SqlDataReader reader = cmd.ExecuteReader();
+        while(reader.Read())
+        {
+            clients.Add(reader.GetString(0));
+        }
+        conn.Close();
+        foreach(string client in clients)
+        {
+            clientes.Items.Add(client);
+        }
         clientes.Size = new Size(200, 30);
         clientes.Location = new Point(50, 440);
         clientes.Font = new Font("Open Sans", 12);
         clientes.DropDownStyle = ComboBoxStyle.DropDownList;
         clientes.BackColor = Color.White;
         this.Controls.Add(clientes);
-        RegisterScreen.clients.ForEach(delegate(Client client)
+        List<string> lawyerss = new List<string>();
+        conn.Open();
+        SqlCommand cmd2 = new SqlCommand();
+        cmd2.Connection = conn;
+        cmd2.CommandType = CommandType.Text;
+        cmd2.CommandText = "SELECT NameLawyer FROM Lawyer";
+        SqlDataReader reader2 = cmd2.ExecuteReader();
+        while (reader2.Read())
         {
-            clientes.Items.Add(client.Name+" "+client.Name2);
-        });
+            lawyerss.Add(reader2.GetString(0));
+        }
+        conn.Close();
+        foreach (string lawyer in lawyerss)
+        {
+            lawyers.Items.Add(lawyer);
+        }
+        lawyers.Size = new Size(200, 30);
+        lawyers.Location = new Point(50, 490);
+        lawyers.Font = new Font("Open Sans", 12);
+        lawyers.DropDownStyle = ComboBoxStyle.DropDownList;
+        lawyers.BackColor = Color.White;
+        this.Controls.Add(lawyers);
         this.MouseDown += new MouseEventHandler(Calendar_MouseDown);
         this.MouseMove += new MouseEventHandler(Calendar_MouseMove);
         goback.Size = new Size(60, 38);
@@ -670,7 +653,7 @@ public class Calendar : Form
         goback.Paint += new PaintEventHandler(goback_Paint);
         goback.Click += new EventHandler(goback_Click);
         btn.Size = new Size(200, 30);
-        btn.Location = new Point(50, 490);
+        btn.Location = new Point(50, 540);
         btn.FlatStyle = FlatStyle.Flat;
         btn.FlatAppearance.BorderSize = 0;
         btn.BackColor = Color.FromArgb(0, 122, 204);
