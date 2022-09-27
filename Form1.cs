@@ -587,6 +587,7 @@ public class Calendar : Form
         calendario.Size = new Size(300, 300);
         calendario.Location = new Point(10,42);
         calendario.Paint += new PaintEventHandler(calendario_Paint);
+        calendario.DateChanged += new DateRangeEventHandler(calendario_DateChanged);
         this.Controls.Add(calendario);
         exit.Size = new Size(38, 38);
         exit.Location = new Point(1460, 0);
@@ -700,7 +701,29 @@ public class Calendar : Form
         }
         schedule.Controls.Add(grid);
     }
-    void grid_CellClick(object sender, DataGridViewCellEventArgs e)
+    public void calendario_DateChanged(object sender, DateRangeEventArgs e)
+    {
+        string client, client_id, lawyer, lawyer_id, date;
+        conn.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandType = CommandType.Text; 
+        cmd.CommandText = "SELECT IDClient, IDLawyer, DateAppointment FROM Appointment WHERE DateAppointment = @date";
+        cmd.Parameters.AddWithValue("@date", calendario.SelectionStart);
+        date=calendario.SelectionStart.ToString();
+        SqlDataReader reader = cmd.ExecuteReader();
+        
+        
+            
+        
+            
+    }
+    public void WriteAppointment()
+    {
+
+    }
+    
+    private void grid_CellClick(object sender, DataGridViewCellEventArgs e)
     {
         if (e.RowIndex >= 0 && e.ColumnIndex == 0)
     {
@@ -719,7 +742,7 @@ public class Calendar : Form
     }
 
     }
-    public void btn_Click(object sender, EventArgs e)
+    private void btn_Click(object sender, EventArgs e)
     {
         DateTime date = new DateTime();
         foreach (DataGridViewRow row in grid.Rows)
