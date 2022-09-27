@@ -44,12 +44,14 @@ public partial class Form1 : Form
         passwordLabel.Location = new Point(130, 530);
         passwordLabel.Size = new Size(110, 30);
         passwordLabel.BackColor = Color.Transparent;
+
         this.Controls.Add(passwordLabel);
         username.Location = new Point(250, 480);
         username.Size = new Size(265, 20);
         this.Controls.Add(username);
         password.Location = new Point(250, 530);
         password.Size = new Size(265, 20);
+        password.PasswordChar = '*';
         this.Controls.Add(password);
         this.CenterToScreen();
         LoginLabel.Text = "Welcome, please Login";
@@ -524,7 +526,7 @@ public class RegisterScreen:Form
         }
         cmd.Connection = conn;
         cmd.CommandType = CommandType.Text;
-        cmd.CommandText = "INSERT INTO Client (IDClient, NameClient, EmailClient, AddressClient, PostalCode, City, Notes, PhoneClient) VALUES (@ID, @NameClient, @EmailClient, @AddressClient, @PostalCode, @City, @Notes, @PhoneClient)";
+        cmd.CommandText = "INSERT INTO Client (IDClient, NameClient, EmailClient, AddressClient, PostalCodeClient, CityClient, NotesClient, PhoneClient) VALUES (@ID, @NameClient, @EmailClient, @AddressClient, @PostalCode, @City, @Notes, @PhoneClient)";
         string name = namebox.Text + " " + name2box.Text;
         cmd.Parameters.AddWithValue("@ID", count + 1);
         cmd.Parameters.AddWithValue("@NameClient", name);
@@ -535,6 +537,7 @@ public class RegisterScreen:Form
         cmd.Parameters.AddWithValue("@Notes", notesbox.Text);
         cmd.Parameters.AddWithValue("@PhoneClient", phonebox.Text);
         cmd.ExecuteNonQuery();
+        conn.Close();
         System.Windows.Forms.MessageBox.Show("Registered");
     }
     private void exit_Click(object sender, EventArgs e)
@@ -672,7 +675,7 @@ public class Calendar : Form
         grid.Columns[2].Width = 1050;
         grid.Columns[0].HeaderText = "Selected";
         grid.Columns[1].HeaderText = "Hour";
-        grid.Columns[2].HeaderText = "Client";
+        grid.Columns[2].HeaderText = "Appointment";
         grid.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
         grid.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
         grid.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -718,7 +721,54 @@ public class Calendar : Form
     }
     public void btn_Click(object sender, EventArgs e)
     {
-        
+        DateTime date = new DateTime();
+        foreach (DataGridViewRow row in grid.Rows)
+        {
+            if (Convert.ToBoolean(row.Cells[0].EditedFormattedValue))
+            {
+                date = calendario.SelectionStart + TimeSpan.Parse(row.Cells[1].Value.ToString());
+            }
+        }
+        int lawyer_id;
+        int client_id;
+        conn.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandType = CommandType.Text;
+        cmd.CommandText = "SELECT IdLawyer FROM Lawyer WHERE NameLawyer = '" + lawyers.Text + "'";
+        lawyer_id = Convert.ToInt32(cmd.ExecuteScalar());
+        string statement = "SELECT COUNT(*) FROM Appointment";
+        int count = 0;
+        using(cmd)
+
+        {
+           using(SqlCommand cmd2 = new SqlCommand(statement, conn))
+           {
+               count = (int)cmd2.ExecuteScalar();
+           }
+        }
+        string sqlformatdate = date.ToString("yyyy-MM-dd HH:mm:ss");
+        conn.Close();
+        conn.Open();
+        SqlCommand cmd4 = new SqlCommand();
+        cmd4.Connection = conn;
+        cmd4.CommandType = CommandType.Text;
+        cmd4.CommandText = "SELECT IdClient FROM Client WHERE NameClient = '" + clientes.Text + "'";
+        client_id = Convert.ToInt32(cmd4.ExecuteScalar());
+        conn.Close();
+        conn.Open();
+        SqlCommand cmd3 = new SqlCommand();
+        cmd3.Connection = conn;
+        cmd3.CommandType = CommandType.Text;
+        cmd3.CommandText = "INSERT INTO Appointment(IdAppointment, DateAppointment, IdClient, IdLawyer) VALUES(@IdAppointment, @DateAppointment, @IdClient, @IdLawyer)";
+        cmd3.Parameters.AddWithValue("@IdAppointment", count+1);
+        cmd3.Parameters.AddWithValue("@DateAppointment", sqlformatdate);
+        cmd3.Parameters.AddWithValue("@IdLawyer", lawyer_id);
+        cmd3.Parameters.AddWithValue("@IdClient", client_id);
+        cmd3.ExecuteNonQuery();
+        conn.Close();
+        MessageBox.Show("Appointment added successfully");
+
     }
     private void goback_Click(object sender, EventArgs e)
     {
@@ -774,13 +824,4 @@ public class Calendar : Form
         e.Graphics.DrawLine(blackpen, 0, 40, this.Width, 40);
 
     }
-}
-
-public class Appointment
-
-{
-    public DateTime day { get; set; }
-    public int hour { get; set; }
-    public string clientname { get; set; }
-    public string clientname2 { get; set; }
 }
