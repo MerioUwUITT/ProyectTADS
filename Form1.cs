@@ -1,5 +1,6 @@
 using System.Data.SqlClient;
 using System.Data;
+using System.Runtime;
 namespace ProjectTADS;
 public partial class Form1 : Form
 {
@@ -90,6 +91,7 @@ public partial class Form1 : Form
         if(username.Text == "" || password.Text == "")
         {
             MessageBox.Show("Please enter a username and password");
+            conn.Close();
         }
         else
         {
@@ -275,6 +277,28 @@ public class Menu:Form
         MakeDate.FlatAppearance.BorderSize = 0;
         MakeDate.Click += new EventHandler(MakeDate_Click);
         this.Controls.Add(MakeDate);
+        if(EmptyList())
+        {
+            emptylistwarning.Text = "There are no clients registered";
+            emptylistwarning.Size = new Size(200, 50);
+            emptylistwarning.Location = new Point(100, 300);
+            this.Controls.Add(emptylistwarning);
+        }
+    }
+    private bool EmptyList()
+    {
+        conn.Open();
+        SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Client", conn);
+        int count = (int)cmd.ExecuteScalar();
+        conn.Close();
+        if (count == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     private void MakeDate_Click(object sender, EventArgs e)
     {
@@ -538,8 +562,35 @@ public class RegisterScreen:Form
         cmd.Parameters.AddWithValue("@PhoneClient", phonebox.Text);
         cmd.ExecuteNonQuery();
         conn.Close();
-        System.Windows.Forms.MessageBox.Show("Registered");
+        bool dupe = RemoveDuplicates();
+        if (dupe == true)
+        {
+            MessageBox.Show("Client already exists");
+        }
+        else
+        {
+            MessageBox.Show("Client added");
+        }
     }
+    public bool RemoveDuplicates()
+    {
+        conn.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.CommandType = CommandType.Text;
+        cmd.CommandText = "DELETE FROM Client WHERE IDClient NOT IN (SELECT MIN(IDClient) FROM Client GROUP BY NameClient)";
+        if (cmd.ExecuteNonQuery() > 0)
+        {
+            conn.Close();
+            return true;
+        }
+        else
+        {
+            conn.Close();
+            return false;
+        }
+    }
+    
     private void exit_Click(object sender, EventArgs e)
     {
         ExitScreen exitmbox = new ExitScreen();
@@ -692,7 +743,13 @@ public class Calendar : Form
         {
             if(i>=8 && i<=16)
             {
-                grid.Rows.Add(false, i+":00", "");
+                if(i<10){   
+                    grid.Rows.Add(false, "0" + i + ":00", "");
+                }
+                else
+                {
+                    grid.Rows.Add(false, i + ":00", "");
+                }
             }
         }
         foreach (DataGridViewRow row in grid.Rows)
@@ -703,24 +760,86 @@ public class Calendar : Form
     }
     public void calendario_DateChanged(object sender, DateRangeEventArgs e)
     {
-        string client, client_id, lawyer, lawyer_id, date;
+        foreach (DataGridViewRow row in grid.Rows)
+        {
+            row.Cells[2].Value = "";
+        }
+        FillRows();
+    }
+    public void FillRows()
+    {
+        int[] IDAppointment = new int[9];
         conn.Open();
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-        cmd.CommandType = CommandType.Text; 
-        cmd.CommandText = "SELECT IDClient, IDLawyer, DateAppointment FROM Appointment WHERE DateAppointment = @date";
-        cmd.Parameters.AddWithValue("@date", calendario.SelectionStart);
-        date=calendario.SelectionStart.ToString();
+        cmd.CommandType = CommandType.Text;
+        cmd.CommandText = "SELECT IDAppointment, TimeAppointment FROM Appointment WHERE DateAppointment = '" + calendario.SelectionStart.ToString("yyyy-MM-dd") + "'";
         SqlDataReader reader = cmd.ExecuteReader();
-        
-        
-            
-        
-            
-    }
-    public void WriteAppointment()
-    {
-
+        while (reader.Read())
+        {
+            var nose= reader.GetTimeSpan(1);
+            DateTime conversion = new DateTime(nose.Ticks);
+            string onlyhour = conversion.ToString("HH")+":00";
+            switch(onlyhour)
+            {
+                case "08:00":
+                    IDAppointment[0] = reader.GetInt32(0);
+                    break;
+                case "09:00":
+                    IDAppointment[1] = reader.GetInt32(0);
+                    break;
+                case "10:00":
+                    IDAppointment[2] = reader.GetInt32(0);
+                    break;
+                case "11:00":
+                    IDAppointment[3] = reader.GetInt32(0);
+                    break;
+                case "12:00":
+                    IDAppointment[4] = reader.GetInt32(0);
+                    break;
+                case "13:00":
+                    IDAppointment[5] = reader.GetInt32(0);
+                    break;
+                case "14:00":
+                    IDAppointment[6] = reader.GetInt32(0);
+                    break;
+                case "15:00":
+                    IDAppointment[7] = reader.GetInt32(0);
+                    break;
+                case "16:00":
+                    IDAppointment[8] = reader.GetInt32(0);
+                    break;
+            }
+        }
+        conn.Close();
+        for (int i = 0; i < 9; i++)
+        {
+            if (IDAppointment[i] != 0)
+            {
+                conn.Open();
+                SqlCommand cmd2 = new SqlCommand();
+                cmd2.Connection = conn;
+                cmd2.CommandType = CommandType.Text;
+                cmd2.CommandText = "SELECT NameClient FROM Client WHERE IDClient = (SELECT IDClient FROM Appointment WHERE IDAppointment = " + IDAppointment[i] + ")";
+                SqlDataReader reader2 = cmd2.ExecuteReader();
+                while (reader2.Read())
+                {
+                    grid.Rows[i].Cells[2].Value = reader2.GetString(0);
+                }
+                conn.Close();
+                conn.Open();
+                SqlCommand cmd3 = new SqlCommand();
+                cmd3.Connection = conn;
+                cmd3.CommandType = CommandType.Text;
+                cmd3.CommandText = "SELECT NameLawyer FROM Lawyer WHERE IDLawyer = (SELECT IDLawyer FROM Appointment WHERE IDAppointment = " + IDAppointment[i] + ")";
+                SqlDataReader reader3 = cmd3.ExecuteReader();
+                while (reader3.Read())
+                {
+                    grid.Rows[i].Cells[2].Value += " - " + reader3.GetString(0);
+                }
+                conn.Close();
+            }
+        }
     }
     
     private void grid_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -745,11 +864,13 @@ public class Calendar : Form
     private void btn_Click(object sender, EventArgs e)
     {
         DateTime date = new DateTime();
+        date = calendario.SelectionStart; 
+        string time = "";
         foreach (DataGridViewRow row in grid.Rows)
         {
             if (Convert.ToBoolean(row.Cells[0].EditedFormattedValue))
             {
-                date = calendario.SelectionStart + TimeSpan.Parse(row.Cells[1].Value.ToString());
+                time = row.Cells[1].Value.ToString();
             }
         }
         int lawyer_id;
@@ -770,7 +891,8 @@ public class Calendar : Form
                count = (int)cmd2.ExecuteScalar();
            }
         }
-        string sqlformatdate = date.ToString("yyyy-MM-dd HH:mm:ss");
+        string sqlformatdate = date.ToString("yyyy-MM-dd");
+        string sqlformattime = time.ToString();
         conn.Close();
         conn.Open();
         SqlCommand cmd4 = new SqlCommand();
@@ -783,15 +905,16 @@ public class Calendar : Form
         SqlCommand cmd3 = new SqlCommand();
         cmd3.Connection = conn;
         cmd3.CommandType = CommandType.Text;
-        cmd3.CommandText = "INSERT INTO Appointment(IdAppointment, DateAppointment, IdClient, IdLawyer) VALUES(@IdAppointment, @DateAppointment, @IdClient, @IdLawyer)";
+        cmd3.CommandText = "INSERT INTO Appointment(IdAppointment, DateAppointment, TimeAppointment, IdClient, IdLawyer) VALUES(@IdAppointment, @DateAppointment,@TimeAppointment, @IdClient, @IdLawyer)";
         cmd3.Parameters.AddWithValue("@IdAppointment", count+1);
         cmd3.Parameters.AddWithValue("@DateAppointment", sqlformatdate);
+        cmd3.Parameters.AddWithValue("@TimeAppointment", sqlformattime);
         cmd3.Parameters.AddWithValue("@IdLawyer", lawyer_id);
         cmd3.Parameters.AddWithValue("@IdClient", client_id);
         cmd3.ExecuteNonQuery();
         conn.Close();
         MessageBox.Show("Appointment added successfully");
-
+        FillRows();
     }
     private void goback_Click(object sender, EventArgs e)
     {
